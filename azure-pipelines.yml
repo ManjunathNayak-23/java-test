@@ -47,6 +47,6 @@ steps:
     distributeType: 'sig'
     galleryImageId: '/subscriptions/7b295770-0ff0-4cec-9a3c-45163fd93362/resourceGroups/myVMSSResourceGroup/providers/Microsoft.Compute/galleries/myVMSSGallery/images/MyImage/versions/0.0.$(Build.BuildId)'
     replicationRegions: 'eastus2'
-    ibSubscription: '7b295770-0ff0-4cec-9a3c-45163fd93362'
+    ibSubscription: 'azure-new'
     ibAzureResourceGroup: 'myVMSSResourceGroup'
     ibLocation: 'eastus2'
