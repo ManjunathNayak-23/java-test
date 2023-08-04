@@ -9,51 +9,50 @@ pool:
   vmImage: 'ubuntu-latest'
 
 steps:
-- task: Maven@4
-  inputs:
-    mavenPomFile: 'pom.xml'
-    mavenOptions: '-Xmx3072m'
-    javaHomeOption: 'JDKVersion'
-    jdkVersionOption: '1.8'
-    jdkArchitectureOption: 'x64'
-    publishJUnitResults: true
-    testResultsFiles: '**/surefire-reports/TEST-*.xml'
-    goals: 'package'
+# - task: Maven@4
+#   inputs:
+#     mavenPomFile: 'pom.xml'
+#     mavenOptions: '-Xmx3072m'
+#     javaHomeOption: 'JDKVersion'
+#     jdkVersionOption: '1.8'
+#     jdkArchitectureOption: 'x64'
+#     publishJUnitResults: true
+#     testResultsFiles: '**/surefire-reports/TEST-*.xml'
+#     goals: 'package'
 
-- task: CopyFiles@2
-  displayName: 'Copy File to: $(TargetFolder)'
-  inputs:
-    SourceFolder: '$(Build.SourcesDirectory)'
-    Contents: |
-      **/*.sh 
-      **/*.war
-      **/*jar-with-dependencies.jar
-    TargetFolder: '$(System.DefaultWorkingDirectory)/pipeline-artifacts/'
-    flattenFolders: true
+# - task: CopyFiles@2
+#   displayName: 'Copy File to: $(TargetFolder)'
+#   inputs:
+#     SourceFolder: '$(Build.SourcesDirectory)'
+#     Contents: |
+#       **/*.sh 
+#       **/*.war
+#       **/*jar-with-dependencies.jar
+#     TargetFolder: '$(System.DefaultWorkingDirectory)/pipeline-artifacts/'
+#     flattenFolders: true
 
-- task: AzureImageBuilderTask@1
-  displayName: 'Azure VM Image Builder Task'
-  inputs:
-    managedIdentity: '/subscriptions/7b295770-0ff0-4cec-9a3c-45163fd93362/resourcegroups/myVMSSResourceGroup/providers/Microsoft.ManagedIdentity/userAssignedIdentities/myVMSSIdentity'
-    imageSource: 'marketplace'
-    packagePath: '$(System.DefaultWorkingDirectory)/pipeline-artifacts'
-    inlineScript: |
-      sudo mkdir /lib/buildArtifacts
-      sudo cp  "/tmp/pipeline-artifacts.tar.gz" /lib/buildArtifacts/.
-      cd /lib/buildArtifacts/.
-      sudo tar -zxvf pipeline-artifacts.tar.gz
-      sudo sh install.sh
-    storageAccountName: 'vmssstorageaccount2311'
-    distributeType: 'sig'
-    galleryImageId: '/subscriptions/7b295770-0ff0-4cec-9a3c-45163fd93362/resourceGroups/myVMSSResourceGroup/providers/Microsoft.Compute/galleries/myVMSSGallery/images/MyImage/versions/0.0.$(Build.BuildId)'
-    replicationRegions: 'eastus2'
-    ibSubscription: 'azure-new'
-    ibAzureResourceGroup: 'myVMSSResourceGroup'
-    ibLocation: 'eastus2'
-
+# - task: AzureImageBuilderTask@1
+#   displayName: 'Azure VM Image Builder Task'
+#   inputs:
+#     managedIdentity: '/subscriptions/7b295770-0ff0-4cec-9a3c-45163fd93362/resourcegroups/myVMSSResourceGroup/providers/Microsoft.ManagedIdentity/userAssignedIdentities/myVMSSIdentity'
+#     imageSource: 'marketplace'
+#     packagePath: '$(System.DefaultWorkingDirectory)/pipeline-artifacts'
+#     inlineScript: |
+#       sudo mkdir /lib/buildArtifacts
+#       sudo cp  "/tmp/pipeline-artifacts.tar.gz" /lib/buildArtifacts/.
+#       cd /lib/buildArtifacts/.
+#       sudo tar -zxvf pipeline-artifacts.tar.gz
+#       sudo sh install.sh
+#     storageAccountName: 'vmssstorageaccount2311'
+#     distributeType: 'sig'
+#     galleryImageId: '/subscriptions/7b295770-0ff0-4cec-9a3c-45163fd93362/resourceGroups/myVMSSResourceGroup/providers/Microsoft.Compute/galleries/myVMSSGallery/images/MyImage/versions/0.0.$(Build.BuildId)'
+#     replicationRegions: 'eastus2'
+#     ibSubscription: 'azure-new'
+#     ibAzureResourceGroup: 'myVMSSResourceGroup'
+#     ibLocation: 'eastus2'
 - task: AzureCLI@2
   inputs:
     azureSubscription: 'azure-new'
-    scriptType: 'bash'
+    scriptType: 'pscore'
     scriptLocation: 'inlineScript'
-    inlineScript: 'az vmss update --resource-group myVMSSResourceGroup --name vmss-img --set virtualMachineProfile.storageProfile.imageReference.id=/subscriptions/7b295770-0ff0-4cec-9a3c-45163fd93362/resourceGroups/myVMSSResourceGroup/providers/Microsoft.Compute/galleries/myVMSSGallery/images/MyImage/versions/0.0.$(Build.BuildId)'
+    inlineScript: 'az vmss update --resource-group myVMSSResourceGroup --name vmss-img --set virtualMachineProfile.storageProfile.imageReference.id=/subscriptions/7b295770-0ff0-4cec-9a3c-45163fd93362/resourceGroups/myVMSSResourceGroup/providers/Microsoft.Compute/galleries/myVMSSGallery/images/MyImage/versions/0.0.244'
