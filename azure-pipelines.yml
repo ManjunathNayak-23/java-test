@@ -56,4 +56,4 @@ steps:
     azureSubscription: 'azure-new'
     scriptType: 'bash'
     scriptLocation: 'inlineScript'
-    inlineScript: 'az vmss update --resource-group myVMSSResourceGroup --name vmssScaleSet --set virtualMachineProfile.storageProfile.imageReference.id=/subscriptions/7b295770-0ff0-4cec-9a3c-45163fd93362/resourceGroups/myVMSSResourceGroup/providers/Microsoft.Compute/galleries/myVMSSGallery/images/MyImage/versions/0.0.$(Build.BuildId)'
+    inlineScript: 'az vmss update --resource-group myVMSSResourceGroup --name vmss-img --set virtualMachineProfile.storageProfile.imageReference.id=/subscriptions/7b295770-0ff0-4cec-9a3c-45163fd93362/resourceGroups/myVMSSResourceGroup/providers/Microsoft.Compute/galleries/myVMSSGallery/images/MyImage/versions/0.0.$(Build.BuildId)'
